@@ -6,10 +6,10 @@ namespace NetworkPainter
 {
     #region BepInEx
     [BepInEx.BepInPlugin(pluginGuid, pluginName, pluginVersion)]
-    public class AtmosphericRealismOverhaul : BepInEx.BaseUnityPlugin
+    public class NetworkPainter : BepInEx.BaseUnityPlugin
     {
-        public const string pluginGuid = "net.elmo.stationeers.AtmosphericRealismOverhaul";
-        public const string pluginName = "AtmosphericRealismOverhaul";
+        public const string pluginGuid = "net.elmo.stationeers.NetworkPainter";
+        public const string pluginName = "NetworkPainter";
         public const string pluginVersion = "1.0";
         public static void Log(string line)
         {
