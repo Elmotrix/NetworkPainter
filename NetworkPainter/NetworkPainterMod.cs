@@ -19,105 +19,88 @@ namespace NetworkPainter
             {
                 return;
             }
-            HydroponicTray tray = thing as HydroponicTray;
-            if (tray != null)
+            bool checkered = KeyManager.GetButton(KeyCode.LeftControl);
+            if (thing is HydroponicTray tray)
             {
                 foreach (Pipe item in tray.PipeNetwork.StructureList)
                 {
-                    HydroponicTray trayT = item as HydroponicTray;
-                    if (trayT != null)
+                    if (item is HydroponicTray && (!checkered || NPutility.CheckeredPaintCheck(thing, item)))
                     {
-                        item.SetCustomColor(colorIndex);
-                        if (NetworkManager.IsClient)
-                        {
-                            NetworkClient.SendToServer(new ThingColorMessage
-                            {
-                                ThingId = item.netId,
-                                ColorIndex = item.CustomColor.Index
-                            });
-                        }
+                        NPutility.Paint(item, colorIndex);
                     }
                 }
                 return;
             }
-            PassiveVent pv = thing as PassiveVent;
-            if (pv != null)
+            if (thing is PassiveVent pv)
             {
                 foreach (Pipe item in pv.PipeNetwork.StructureList)
                 {
-                    PassiveVent pvt = item as PassiveVent;
-                    if (pvt != null)
+                    if (item is PassiveVent && (!checkered || NPutility.CheckeredPaintCheck(thing, item)))
                     {
-                        item.SetCustomColor(colorIndex);
-                        if (NetworkManager.IsClient)
-                        {
-                            NetworkClient.SendToServer(new ThingColorMessage
-                            {
-                                ThingId = item.netId,
-                                ColorIndex = item.CustomColor.Index
-                            });
-                        }
+                        NPutility.Paint(item, colorIndex);
                     }
                 }
                 return;
             }
-            Pipe pipe = thing as Pipe;
-            if (pipe != null)
+            if (thing is Pipe pipe)
             {
                 foreach (Pipe item in pipe.PipeNetwork.StructureList)
                 {
-                    PassiveVent pvt = item as PassiveVent;
-                    HydroponicTray trayT = item as HydroponicTray;
-                    if (pvt == null && trayT == null)
+                    if (!(item is PassiveVent) && !(item is HydroponicTray) && (!checkered || NPutility.CheckeredPaintCheck(thing, item)))
                     {
-                        item.SetCustomColor(colorIndex);
-                        if (NetworkManager.IsClient)
-                        {
-                            NetworkClient.SendToServer(new ThingColorMessage
-                            {
-                                ThingId = item.netId,
-                                ColorIndex = item.CustomColor.Index
-                            });
-                        }
+                        NPutility.Paint(item, colorIndex);
                     }
                 }
                 return;
             }
-            Cable cable = thing as Cable;
-            if (cable != null)
+            if (thing is Cable cable)
             {
                 foreach (Cable item in cable.CableNetwork.CableList)
                 {
-                    item.SetCustomColor(colorIndex);
-                    if (NetworkManager.IsClient)
+                    if (!checkered || NPutility.CheckeredPaintCheck(thing, item))
                     {
-                        NetworkClient.SendToServer(new ThingColorMessage
-                        {
-                            ThingId = item.netId,
-                            ColorIndex = item.CustomColor.Index
-                        });
+                        NPutility.Paint(item, colorIndex);
                     }
                 }
                 return;
             }
-            Chute chute = thing as Chute;
-            if (chute != null)
+            if (thing is Chute chute)
             {
                 foreach (Chute item in chute.ChuteNetwork.ChuteList)
                 {
-                    item.SetCustomColor(colorIndex);
-                    if (NetworkManager.IsClient)
+                    if (!checkered || NPutility.CheckeredPaintCheck(thing, item))
                     {
-                        NetworkClient.SendToServer(new ThingColorMessage
-                        {
-                            ThingId = item.netId,
-                            ColorIndex = item.CustomColor.Index
-                        });
+                        NPutility.Paint(item, colorIndex);
                     }
                 }
                 return;
             }
             return;
+        }
+    }
+
+    public class NPutility
+    {
+        public static void Paint(Thing thing, int colorIndex)
+        {
+            thing.SetCustomColor(colorIndex);
+            if (NetworkManager.IsClient)
+            {
+                NetworkClient.SendToServer(new ThingColorMessage
+                {
+                    ThingId = thing.netId,
+                    ColorIndex = thing.CustomColor.Index
+                });
+            }
+        }
+
+        public static bool CheckeredPaintCheck(Thing original, Thing thing)
+        {
+            float one = (Mathf.Round(Mathf.Abs(original.Position.x) * 2) % 2) == (Mathf.Round(Mathf.Abs(thing.Position.x) * 2) % 2) ? 1 : 0;
+            float two = (Mathf.Round(Mathf.Abs(original.Position.y) * 2) % 2) == (Mathf.Round(Mathf.Abs(thing.Position.y) * 2) % 2) ? 1 : 0;
+            float three = (Mathf.Round(Mathf.Abs(original.Position.z) * 2) % 2) == (Mathf.Round(Mathf.Abs(thing.Position.z) * 2) % 2) ? 1 : 0;
+
+            return (one + two + three) % 2 != 0;
         }
     }
 }
