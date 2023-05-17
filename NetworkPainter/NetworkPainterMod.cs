@@ -66,7 +66,7 @@ namespace NetworkPainter
             }
             if (thing is Chute chute)
             {
-                foreach (Chute item in chute.ChuteNetwork.ChuteList)
+                foreach (Chute item in chute.ChuteNetwork.StructureList)
                 {
                     if (!checkered || NPutility.CheckeredPaintCheck(thing, item))
                     {
