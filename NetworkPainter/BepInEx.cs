@@ -10,7 +10,7 @@ namespace NetworkPainter
     {
         public const string pluginGuid = "net.elmo.stationeers.NetworkPainter";
         public const string pluginName = "NetworkPainter";
-        public const string pluginVersion = "1.3";
+        public const string pluginVersion = "1.4";
         public static void Log(string line)
         {
             Debug.Log("[" + pluginName + "]: " + line);
